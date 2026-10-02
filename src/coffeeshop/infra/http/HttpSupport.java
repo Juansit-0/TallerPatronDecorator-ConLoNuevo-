@@ -5,7 +5,10 @@ import com.sun.net.httpserver.HttpExchange;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 final class HttpSupport {
 
@@ -34,5 +37,28 @@ final class HttpSupport {
 
     static void methodNotAllowed(HttpExchange exchange) throws IOException {
         sendError(exchange, 405, "Method not allowed");
+    }
+
+    static Map<String, String> query(HttpExchange exchange) {
+        Map<String, String> values = new HashMap<>();
+        String raw = exchange.getRequestURI().getRawQuery();
+        if (raw == null || raw.isEmpty()) {
+            return values;
+        }
+        for (String pair : raw.split("&")) {
+            int separator = pair.indexOf('=');
+            String key = separator >= 0 ? pair.substring(0, separator) : pair;
+            String value = separator >= 0 ? pair.substring(separator + 1) : "";
+            values.put(URLDecoder.decode(key, StandardCharsets.UTF_8), URLDecoder.decode(value, StandardCharsets.UTF_8));
+        }
+        return values;
+    }
+
+    static int intParam(Map<String, String> query, String name, int fallback) {
+        try {
+            return Integer.parseInt(query.getOrDefault(name, String.valueOf(fallback)));
+        } catch (NumberFormatException error) {
+            return fallback;
+        }
     }
 }

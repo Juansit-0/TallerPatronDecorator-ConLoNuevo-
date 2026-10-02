@@ -1,6 +1,7 @@
 package coffeeshop;
 
 import coffeeshop.application.OrderService;
+import coffeeshop.infra.JsonFileOrderRepository;
 import coffeeshop.infra.http.CatalogHandler;
 import coffeeshop.infra.http.HistoryHandler;
 import coffeeshop.infra.http.OrderHandler;
@@ -15,7 +16,8 @@ public class CoffeeShopServer {
 
     public static void main(String[] args) throws IOException {
         int port = args.length > 0 ? Integer.parseInt(args[0]) : 8080;
-        OrderService service = new OrderService();
+        JsonFileOrderRepository repository = new JsonFileOrderRepository(Path.of("data", "orders.json"));
+        OrderService service = new OrderService(repository);
 
         HttpServer server = HttpServer.create(new InetSocketAddress(port), 0);
         server.createContext("/api/catalog", new CatalogHandler());
@@ -26,5 +28,6 @@ public class CoffeeShopServer {
         server.start();
 
         System.out.println("CoffeeShopServer escuchando en http://localhost:" + port);
+        System.out.println("Pedidos guardados en " + repository.getFile() + " (" + service.getHistory().size() + " cargados)");
     }
 }

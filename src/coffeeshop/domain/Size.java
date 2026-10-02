@@ -27,4 +27,13 @@ public enum Size {
     public double getPriceDelta() {
         return priceDelta;
     }
+
+    public static Size fromCode(String code) {
+        for (Size size : values()) {
+            if (size.code.equalsIgnoreCase(code)) {
+                return size;
+            }
+        }
+        throw new IllegalArgumentException("Unknown size: " + code);
+    }
 }
