@@ -1,0 +1,140 @@
+package coffeeshop.tests;
+
+import coffeeshop.application.OrderService;
+import coffeeshop.application.enums.DrinkType;
+import coffeeshop.application.enums.ExtraType;
+import coffeeshop.application.model.OrderRequest;
+import coffeeshop.application.model.OrderResult;
+import coffeeshop.application.model.ReceiptLine;
+import coffeeshop.domain.Beverage;
+import coffeeshop.domain.Size;
+import coffeeshop.domain.decorators.CaramelDecorator;
+import coffeeshop.domain.decorators.ExtraShotDecorator;
+import coffeeshop.domain.decorators.SizeDecorator;
+import coffeeshop.domain.drinks.Espresso;
+import coffeeshop.domain.drinks.Latte;
+import java.util.List;
+
+public class TestRunner {
+
+    private static int passed = 0;
+    private static int failed = 0;
+
+    public static void main(String[] args) {
+        run("espresso base cost is 2.00", () -> assertEquals(2.00, new Espresso().getCost()));
+        run("espresso description", () -> assertEquals("Espresso", new Espresso().getDescription()));
+        run("latte base cost is 3.50", () -> assertEquals(3.50, new Latte().getCost()));
+
+        run("extra shot adds 0.80", () ->
+                assertEquals(4.30, new ExtraShotDecorator(new Latte()).getCost()));
+
+        run("caramel adds 0.60", () ->
+                assertEquals(4.10, new CaramelDecorator(new Latte()).getCost()));
+
+        run("large size adds 1.00", () ->
+                assertEquals(4.50, new SizeDecorator(new Latte(), Size.LARGE).getCost()));
+
+        run("small size subtracts 0.50", () ->
+                assertEquals(3.00, new SizeDecorator(new Latte(), Size.SMALL).getCost()));
+
+        run("case study: latte + shot + caramel + large = 5.90", () -> {
+            OrderService service = new OrderService();
+            OrderResult result = service.place(new OrderRequest(
+                    DrinkType.LATTE, Size.LARGE, List.of(ExtraType.SHOT, ExtraType.CARAMEL)));
+            assertEquals(5.90, result.total());
+        });
+
+        run("decorator chain is recursive and order independent in cost", () -> {
+            Beverage a = new CaramelDecorator(new ExtraShotDecorator(new Latte()));
+            Beverage b = new ExtraShotDecorator(new CaramelDecorator(new Latte()));
+            assertEquals(a.getCost(), b.getCost());
+        });
+
+        run("description grows with the chain", () -> {
+            OrderService service = new OrderService();
+            OrderResult result = service.place(new OrderRequest(
+                    DrinkType.LATTE, Size.MEDIUM, List.of(ExtraType.MILK, ExtraType.VANILLA)));
+            assertEquals("Latte + leche + vainilla (Mediano)", result.description());
+        });
+
+        run("layers include base, extras and size", () -> {
+            OrderService service = new OrderService();
+            OrderResult result = service.place(new OrderRequest(
+                    DrinkType.ESPRESSO, Size.LARGE, List.of(ExtraType.SHOT)));
+            assertEquals(3, result.lines().size());
+            assertEquals("ESPRESSO", result.lines().get(0).code());
+            assertEquals("SHOT", result.lines().get(1).code());
+            assertEquals("LARGE", result.lines().get(2).code());
+        });
+
+        run("happy hour subtracts 1.00", () -> {
+            OrderService service = new OrderService();
+            OrderResult result = service.place(new OrderRequest(
+                    DrinkType.ESPRESSO, Size.LARGE, List.of(ExtraType.HAPPYHOUR)));
+            assertEquals(2.00, result.total());
+        });
+
+        run("decaf changes description but costs nothing", () -> {
+            OrderService service = new OrderService();
+            OrderResult result = service.place(new OrderRequest(
+                    DrinkType.AMERICANO, Size.MEDIUM, List.of(ExtraType.DECAF)));
+            assertEquals(2.50, result.total());
+            assertEquals("Americano + descafeinado (Mediano)", result.description());
+        });
+
+        run("history tracks every order", () -> {
+            OrderService service = new OrderService();
+            service.place(new OrderRequest(DrinkType.TEA, Size.MEDIUM, List.of()));
+            service.place(new OrderRequest(DrinkType.TEA, Size.LARGE, List.of(ExtraType.HONEY)));
+            assertEquals(2, service.getHistory().size());
+        });
+
+        run("layers prices sum to total", () -> {
+            OrderService service = new OrderService();
+            OrderResult result = service.place(new OrderRequest(
+                    DrinkType.LATTE, Size.LARGE,
+                    List.of(ExtraType.SHOT, ExtraType.CARAMEL, ExtraType.WHIP)));
+            double sum = result.lines().stream().mapToDouble(ReceiptLine::price).sum();
+            assertEquals(Math.round(sum * 100.0) / 100.0, result.total());
+        });
+
+        System.out.printf("%nResultado: %d pruebas OK, %d fallidas%n", passed, failed);
+        if (failed > 0) {
+            System.exit(1);
+        }
+    }
+
+    private static void run(String name, TestCase test) {
+        try {
+            test.execute();
+            passed++;
+            System.out.println("PASS  " + name);
+        } catch (Throwable error) {
+            failed++;
+            System.out.println("FAIL  " + name + " -> " + error.getMessage());
+        }
+    }
+
+    private static void assertEquals(double expected, double actual) {
+        if (Math.abs(expected - actual) > 0.0001) {
+            throw new AssertionError("esperado " + expected + " pero fue " + actual);
+        }
+    }
+
+    private static void assertEquals(String expected, String actual) {
+        if (!expected.equals(actual)) {
+            throw new AssertionError("esperado \"" + expected + "\" pero fue \"" + actual + "\"");
+        }
+    }
+
+    private static void assertEquals(int expected, int actual) {
+        if (expected != actual) {
+            throw new AssertionError("esperado " + expected + " pero fue " + actual);
+        }
+    }
+
+    @FunctionalInterface
+    private interface TestCase {
+        void execute() throws Exception;
+    }
+}

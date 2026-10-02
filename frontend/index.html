@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cafetería Decorator · Arma tu bebida</title>
+  <meta name="description" content="Sistema de pedidos de cafetería que demuestra el patrón Decorator.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Young+Serif&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand__mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="30" height="30" fill="none">
+          <path d="M6 12h16v7a7 7 0 0 1-7 7h-2a7 7 0 0 1-7-7v-7Z" fill="currentColor" opacity=".92"/>
+          <path d="M22 13h2.5a3.5 3.5 0 0 1 0 7H22" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M12 4c-.8 1.4-.8 2.6 0 4M16.5 3c-.8 1.4-.8 2.6 0 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity=".8"/>
+        </svg>
+      </span>
+      <div class="brand__text">
+        <h1>Cafetería Decorator</h1>
+        <p>Arma tu bebida capa por capa</p>
+      </div>
+    </div>
+    <nav class="topbar__nav">
+      <span class="pill">Patrón <strong>Decorator</strong></span>
+      <span class="pill pill--ghost" id="api-status" data-state="waiting">Conectando…</span>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="panel panel--config" aria-labelledby="config-title">
+      <header class="panel__head">
+        <h2 id="config-title">1 · Elige y personaliza</h2>
+        <p>Selecciona una base, su tamaño y todos los extras que quieras.</p>
+      </header>
+
+      <div class="field">
+        <h3 class="field__label">Bebida base</h3>
+        <div class="drink-grid" id="base-options" role="radiogroup" aria-label="Bebida base"></div>
+      </div>
+
+      <div class="field">
+        <h3 class="field__label">Tamaño</h3>
+        <div class="segmented" id="size-options" role="radiogroup" aria-label="Tamaño"></div>
+      </div>
+
+      <div class="field">
+        <h3 class="field__label">Extras <span class="field__hint">cada uno es un decorador</span></h3>
+        <div class="chip-grid" id="extras-options"></div>
+      </div>
+    </section>
+
+    <section class="panel panel--preview" aria-labelledby="preview-title">
+      <header class="panel__head">
+        <h2 id="preview-title">2 · Tu bebida</h2>
+        <p>Cada capa que añades envuelve a la anterior.</p>
+      </header>
+
+      <div class="cup-stage" id="cup-stage" aria-hidden="true"></div>
+
+      <div class="chain-block">
+        <h3 class="field__label">Cadena de decoradores</h3>
+        <p class="chain-block__expr" id="chain-expr">—</p>
+        <ol class="chain" id="chain"></ol>
+      </div>
+    </section>
+
+    <aside class="panel panel--order" aria-labelledby="order-title">
+      <header class="panel__head">
+        <h2 id="order-title">3 · Recibo</h2>
+        <p>El total se recalcula en cada combinación.</p>
+      </header>
+
+      <div class="receipt">
+        <div class="receipt__top">
+          <span class="receipt__id" id="receipt-id">Sin pedido</span>
+          <span class="receipt__desc" id="receipt-desc">Elige tu bebida</span>
+        </div>
+        <ul class="receipt__lines" id="receipt-lines"></ul>
+        <div class="receipt__total">
+          <span>Total</span>
+          <strong id="receipt-total">$0.00</strong>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--primary" id="btn-add" type="button">Agregar pedido</button>
+        <button class="btn btn--ghost" id="btn-surprise" type="button">Sorpréndeme</button>
+      </div>
+
+      <div class="history">
+        <div class="history__head">
+          <h3 class="field__label">Historial</h3>
+          <span class="history__stats" id="history-stats">0 pedidos · $0.00</span>
+        </div>
+        <ul class="history__list" id="history-list"></ul>
+      </div>
+    </aside>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <footer class="footer">
+    <span>Java + <code>HttpServer</code> del JDK · interfaz en HTML/CSS/JS · decoradores construidos a mano</span>
+  </footer>
+
+  <script src="cup-render.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

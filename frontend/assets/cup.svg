@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 320" role="img" aria-label="Taza de café">
+  <defs>
+    <linearGradient id="cupBody" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffdf8"/>
+      <stop offset="0.55" stop-color="#f6ead8"/>
+      <stop offset="1" stop-color="#e6d3b8"/>
+    </linearGradient>
+    <linearGradient id="cupRim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#ecdcc4"/>
+    </linearGradient>
+    <linearGradient id="saucer" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f3e6d3"/>
+      <stop offset="1" stop-color="#ddc7a6"/>
+    </linearGradient>
+    <radialGradient id="foam" cx="0.5" cy="0.35" r="0.7">
+      <stop offset="0" stop-color="#fffdf7"/>
+      <stop offset="1" stop-color="#efdfc6"/>
+    </radialGradient>
+    <clipPath id="cupClip">
+      <path d="M58 100 L74 250 Q76 262 88 262 L152 262 Q164 262 166 250 L182 100 Z"/>
+    </clipPath>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="4" />
+    </filter>
+  </defs>
+
+  <ellipse id="cup-shadow" cx="120" cy="286" rx="78" ry="14" fill="#3a241a" opacity="0.16" filter="url(#soft)"/>
+
+  <g id="cup-all">
+    <path d="M42 278 Q120 300 198 278 Q120 292 42 278 Z" fill="url(#saucer)"/>
+
+    <path id="cup-body" d="M50 96 L68 250 Q70 264 86 264 L154 264 Q170 264 172 250 L190 96 Z" fill="url(#cupBody)" stroke="#d8c3a2" stroke-width="2"/>
+
+    <g clip-path="url(#cupClip)">
+      <rect id="liquid" x="40" y="100" width="160" height="180" fill="#c9a06a"/>
+      <ellipse id="liquid-shade" cx="120" cy="250" rx="80" ry="26" fill="#3a241a" opacity="0.12"/>
+      <g id="topping-iced" class="cup-layer" hidden>
+        <rect x="92" y="118" width="22" height="22" rx="5" fill="#e8f4fb" opacity="0.9" transform="rotate(-14 103 129)"/>
+        <rect x="126" y="128" width="22" height="22" rx="5" fill="#dff0fb" opacity="0.85" transform="rotate(18 137 139)"/>
+        <rect x="106" y="150" width="22" height="22" rx="5" fill="#eef8ff" opacity="0.8" transform="rotate(8 117 161)"/>
+      </g>
+    </g>
+
+    <ellipse id="rim" cx="120" cy="96" rx="70" ry="19" fill="url(#cupRim)" stroke="#d8c3a2" stroke-width="2"/>
+    <ellipse id="liquid-surface" cx="120" cy="97" rx="62" ry="15" fill="#d8b98c"/>
+
+    <g id="topping-shot" class="cup-layer" hidden>
+      <ellipse cx="120" cy="97" rx="58" ry="13" fill="#2c1a12" opacity="0.55"/>
+    </g>
+
+    <g id="topping-oat" class="cup-layer" hidden>
+      <ellipse cx="120" cy="96" rx="52" ry="11" fill="#efe0c4" opacity="0.6"/>
+    </g>
+
+    <g id="topping-milk" class="cup-layer" hidden>
+      <path d="M78 96 Q100 86 120 96 T162 96" fill="none" stroke="#fffdf7" stroke-width="5" stroke-linecap="round" opacity="0.85"/>
+      <path d="M88 102 Q112 94 132 102 T156 101" fill="none" stroke="#fffdf7" stroke-width="3" stroke-linecap="round" opacity="0.6"/>
+    </g>
+
+    <g id="topping-vanilla" class="cup-layer" hidden>
+      <circle cx="98" cy="94" r="2.4" fill="#fff6e2"/>
+      <circle cx="118" cy="99" r="2" fill="#fff6e2"/>
+      <circle cx="140" cy="93" r="2.6" fill="#fff6e2"/>
+      <circle cx="130" cy="102" r="1.8" fill="#fff6e2"/>
+      <circle cx="108" cy="101" r="1.8" fill="#fff6e2"/>
+    </g>
+
+    <g id="topping-caramel" class="cup-layer" hidden>
+      <path d="M74 94 Q98 82 120 92 T166 90" fill="none" stroke="#a85f22" stroke-width="6" stroke-linecap="round"/>
+      <path d="M86 101 Q110 91 132 100 T158 99" fill="none" stroke="#c17a34" stroke-width="4" stroke-linecap="round"/>
+    </g>
+
+    <g id="topping-honey" class="cup-layer" hidden>
+      <path d="M84 98 Q108 88 128 96 T160 95" fill="none" stroke="#e0a53a" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="130" cy="104" r="4" fill="#e0a53a" opacity="0.85"/>
+    </g>
+
+    <g id="topping-whip" class="cup-layer" hidden>
+      <ellipse cx="120" cy="90" rx="46" ry="18" fill="url(#foam)"/>
+      <ellipse cx="120" cy="76" rx="34" ry="15" fill="url(#foam)"/>
+      <ellipse cx="120" cy="63" rx="22" ry="11" fill="url(#foam)"/>
+      <ellipse cx="120" cy="54" rx="10" ry="6" fill="#fffdf7"/>
+    </g>
+
+    <g id="topping-decaf" class="cup-layer" hidden>
+      <rect x="188" y="138" width="30" height="20" rx="6" fill="#4d3a2c"/>
+      <circle cx="196" cy="148" r="3.4" fill="#f0e2cc"/>
+      <text x="212" y="152" font-family="Inter, sans-serif" font-size="9" font-weight="700" fill="#f0e2cc" text-anchor="middle">0%</text>
+    </g>
+
+    <g id="topping-happyhour" class="cup-layer" hidden>
+      <rect x="186" y="168" width="34" height="22" rx="7" fill="#6f7d4a"/>
+      <text x="203" y="183" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#f4f6ec" text-anchor="middle">-1</text>
+    </g>
+
+    <g id="steam" data-iced="false" fill="none" stroke="#c9b79c" stroke-width="4" stroke-linecap="round" opacity="0.7">
+      <g>
+        <path d="M100 66 C94 54 106 48 100 36"/>
+      </g>
+      <g>
+        <path d="M120 62 C114 50 126 44 120 30"/>
+      </g>
+      <g>
+        <path d="M140 66 C134 54 146 48 140 36"/>
+      </g>
+    </g>
+  </g>
+</svg>
